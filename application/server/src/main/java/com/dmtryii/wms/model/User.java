@@ -1,5 +1,6 @@
 package com.dmtryii.wms.model;
 
+import com.dmtryii.wms.model.enums.ERole;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -36,17 +37,24 @@ public class User implements UserDetails {
     @Column(updatable = false)
     private LocalDateTime createData;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_id")
-    )
-    private Set<Role> roleId;
+    @ElementCollection(targetClass = ERole.class)
+    @CollectionTable(name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"))
+    private Set<ERole> roleId;
 
-    public User(Long id, String username, String password, String email) {
+    @Transient
+    private Collection<? extends GrantedAuthority> authorities;
+
+    public User(Long id,
+                String username,
+                String password,
+                String email,
+                Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
+        this.authorities = authorities;
     }
 
     @PrePersist
@@ -56,7 +64,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ADMIN"));
+        return List.of(new SimpleGrantedAuthority("CUSTOMER"));            // !!!
     }
 
     @Override
