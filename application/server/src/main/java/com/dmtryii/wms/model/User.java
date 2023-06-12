@@ -3,17 +3,20 @@ package com.dmtryii.wms.model;
 import com.dmtryii.wms.model.enums.ERole;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Data
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class User implements UserDetails {
     @Id
@@ -40,31 +43,14 @@ public class User implements UserDetails {
     @ElementCollection(targetClass = ERole.class)
     @CollectionTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"))
-    private Set<ERole> roleId;
+    private Set<ERole> roles;
 
     @Transient
     private Collection<? extends GrantedAuthority> authorities;
 
-    public User(Long id,
-                String username,
-                String password,
-                String email,
-                Collection<? extends GrantedAuthority> authorities) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.authorities = authorities;
-    }
-
     @PrePersist
     protected void onCreate() {
         this.createData = LocalDateTime.now();
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("CUSTOMER"));            // !!!
     }
 
     @Override
