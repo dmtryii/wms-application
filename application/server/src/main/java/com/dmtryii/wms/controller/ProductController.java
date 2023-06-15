@@ -19,8 +19,16 @@ public class ProductController {
     @Autowired
     private ProductRepository productRepository;
 
+    @GetMapping
+    public ResponseEntity<List<Product>> getAllProduct() {
+
+        List<Product> products = productRepository.findAll();
+
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
     @GetMapping("{category_id}/category")
-        public ResponseEntity<List<Product>> getAllProductByCategoryId(
+    public ResponseEntity<List<Product>> getAllProductByCategoryId(
             @PathVariable(name = "category_id") Long categoryId) {
 
         if(!categoryRepository.existsById(categoryId)) {
@@ -43,4 +51,25 @@ public class ProductController {
         return new ResponseEntity<>(product, HttpStatus.CREATED);
     }
 
+    @PostMapping("{product_id}")
+    public ResponseEntity<Product> updateProduct(
+            @PathVariable(name = "product_id") Long productId,
+            @RequestBody Product productRequest) {
+
+        Product product = productRepository.findById(productId).orElseThrow();
+
+        product.setName(productRequest.getName());
+        product.setPrice(productRequest.getPrice());
+        product.setDescription(product.getDescription());
+
+        return new ResponseEntity<>(productRepository.save(product), HttpStatus.OK);
+    }
+
+    @DeleteMapping("{product_id}")
+    public ResponseEntity<HttpStatus> deleteProduct(@PathVariable(name = "product_id") Long productId) {
+
+        productRepository.deleteById(productId);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
