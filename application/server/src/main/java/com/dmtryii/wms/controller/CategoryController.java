@@ -3,6 +3,7 @@ package com.dmtryii.wms.controller;
 import com.dmtryii.wms.model.Category;
 import com.dmtryii.wms.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,23 +18,37 @@ public class CategoryController {
     private CategoryRepository repository;
 
     @GetMapping("/")
-    private List<Category> getAll() {
-        return repository.findAll();
+    private ResponseEntity<List<Category>> getAll() {
+
+        List<Category> categories = repository.findAll();
+
+        return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    private Optional<Category> getById(@PathVariable Long id) {
-        return repository.findById(id);
+    @GetMapping("/{category_id}")
+    private ResponseEntity<Category> getById(@PathVariable(name = "category_id") Long id) {
+
+        Category category = repository.findById(id).orElseThrow();
+
+        return new ResponseEntity<>(category, HttpStatus.OK);
     }
 
-    @PostMapping("/add")
-    private ResponseEntity<Category> addCategory(@RequestBody Category category) {
-        repository.save(category);
-        return ResponseEntity.ok(category);
+    @PostMapping("/")
+    private ResponseEntity<Category> createCategory(@RequestBody Category category) {
+
+        Category _category = repository.save(new Category(
+                category.getId(),
+                category.getName(),
+                category.getDescription()
+        ));
+
+        return new ResponseEntity<>(_category, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("delete/{id}")
-    private void deleteById(@PathVariable Long id) {
+    @DeleteMapping("/{category_id}")
+    private ResponseEntity<HttpStatus> deleteById(@PathVariable(name = "category_id") Long id) {
         repository.deleteById(id);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
