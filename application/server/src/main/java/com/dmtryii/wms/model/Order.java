@@ -24,7 +24,7 @@ public class Order {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dataOfOrder;
     private String details;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
