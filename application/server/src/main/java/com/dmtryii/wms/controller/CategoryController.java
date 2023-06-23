@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("api/category")
@@ -17,7 +16,7 @@ public class CategoryController {
     @Autowired
     private CategoryRepository repository;
 
-    @GetMapping("/")
+    @GetMapping
     private ResponseEntity<List<Category>> getAll() {
 
         List<Category> categories = repository.findAll();
@@ -33,11 +32,10 @@ public class CategoryController {
         return new ResponseEntity<>(category, HttpStatus.OK);
     }
 
-    @PostMapping("/")
+    @PostMapping
     private ResponseEntity<Category> createCategory(@RequestBody Category category) {
 
         Category _category = repository.save(new Category(
-                category.getId(),
                 category.getName(),
                 category.getDescription()
         ));
