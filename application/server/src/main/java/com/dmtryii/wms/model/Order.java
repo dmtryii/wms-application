@@ -1,15 +1,15 @@
 package com.dmtryii.wms.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -28,6 +28,9 @@ public class Order {
     @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private Set<OrderLine> orderLine;
 
     public Order(LocalDate dataOfOrder, String details, User user) {
         this.dataOfOrder = dataOfOrder;
