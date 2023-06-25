@@ -31,4 +31,7 @@ public class Warehouse {
     @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Location> location;
+    @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<Stock> stock;
 }
