@@ -1,5 +1,6 @@
 package com.dmtryii.wms.model;
 
+import com.dmtryii.wms.model.key.LocationKey;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;

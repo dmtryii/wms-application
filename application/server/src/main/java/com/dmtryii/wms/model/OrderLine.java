@@ -1,5 +1,6 @@
 package com.dmtryii.wms.model;
 
+import com.dmtryii.wms.model.key.OrderLineKey;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Data;

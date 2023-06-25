@@ -1,4 +1,4 @@
-package com.dmtryii.wms.model;
+package com.dmtryii.wms.model.key;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -12,9 +12,9 @@ import java.io.Serializable;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Embeddable
-public class OrderLineKey implements Serializable {
-    @Column(name = "order_id")
-    private Long orderId;
+public class LocationKey  implements Serializable {
+    @Column(name = "warehouse_id")
+    private Long warehouseId;
     @Column(name = "product_id")
     private Long productId;
 }
