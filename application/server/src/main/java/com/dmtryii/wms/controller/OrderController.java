@@ -1,9 +1,8 @@
 package com.dmtryii.wms.controller;
 
+import com.dmtryii.wms.dto.OrderDTO;
 import com.dmtryii.wms.model.Order;
-import com.dmtryii.wms.model.User;
-import com.dmtryii.wms.repository.OrderRepository;
-import com.dmtryii.wms.repository.UserRepository;
+import com.dmtryii.wms.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,34 +15,43 @@ import java.util.List;
 @RequestMapping("api/order")
 public class OrderController {
     @Autowired
-    private OrderRepository orderRepository;
-    @Autowired
-    private UserRepository userRepository;
+    private OrderService orderService;
 
     @GetMapping
     public ResponseEntity<List<Order>> getAllOrder() {
+        List<Order> orders = orderService.getAllOrder();
+        return new ResponseEntity<>(orders, HttpStatus.OK);
+    }
 
-        List<Order> orders = orderRepository.findAll();
+    @GetMapping("{order_id}")
+    public ResponseEntity<Order> getOrderById(@PathVariable(name = "order_id") Long orderId) {
+        Order order = orderService.getOrderById(orderId);
+        return new ResponseEntity<>(order, HttpStatus.OK);
+    }
 
+    @GetMapping("user/{user_id}")
+    public ResponseEntity<List<Order>> getAllOrderByUserId(@PathVariable(name = "user_id") Long userId) {
+        List<Order> orders = orderService.getAllOrderByUserId(userId);
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
     @PostMapping("user/{user_id}")
     public ResponseEntity<Order> createOrder(@PathVariable(name = "user_id") Long userId,
-                                             @RequestBody Order order) {
-
-        User user = userRepository.findById(userId).orElseThrow();
-
-        Order _order = new Order(
-                LocalDate.now(),
-                order.getDetails(),
-                user
-        );
-
-        return new ResponseEntity<>(
-                orderRepository.save(_order),
-                HttpStatus.CREATED
-        );
+                                             @RequestBody OrderDTO orderDTO) {
+        Order order = orderService.createOrder(userId, orderDTO);
+        return new ResponseEntity<>(order, HttpStatus.CREATED);
     }
 
+    @PostMapping("{order_id}")
+    public ResponseEntity<Order> updateOrder(@PathVariable(name = "order_id") Long orderId,
+                                             @RequestBody OrderDTO orderDTO) {
+        Order order = orderService.updateOrder(orderId, orderDTO);
+        return new ResponseEntity<>(order, HttpStatus.OK);
+    }
+
+    @DeleteMapping("{order_id}")
+    public ResponseEntity<HttpStatus> deleteOrderById(@PathVariable(name = "order_id") Long orderId) {
+        orderService.deleteOrderById(orderId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
