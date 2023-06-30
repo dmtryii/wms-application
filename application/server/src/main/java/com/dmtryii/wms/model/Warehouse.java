@@ -20,13 +20,8 @@ public class Warehouse {
     private String name;
     private String address;
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private User user;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "city_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
     private City city;
     @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL)
     @JsonIgnore
