@@ -1,7 +1,9 @@
 package com.dmtryii.wms.controller;
 
 import com.dmtryii.wms.dto.WarehouseDTO;
+import com.dmtryii.wms.model.Location;
 import com.dmtryii.wms.model.Warehouse;
+import com.dmtryii.wms.service.LocationService;
 import com.dmtryii.wms.service.WarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,9 +15,18 @@ import java.util.List;
 @RestController
 @RequestMapping("api/warehouse")
 public class WarehouseController {
-
     @Autowired
     private WarehouseService warehouseService;
+    @Autowired
+    private LocationService locationService;
+
+    @PostMapping("{warehouse_id}/product/{product_id}/quantity/{quantity}")
+    public ResponseEntity<Location> addProductToWarehouse(@PathVariable(name = "warehouse_id") Long warehouseId,
+                                                          @PathVariable(name = "product_id") Long productId,
+                                                          @PathVariable(name = "quantity") int quantity) {
+        Location location = locationService.addProductToWarehouse(warehouseId, productId, quantity);
+        return new ResponseEntity<>(location, HttpStatus.CREATED);
+    }
 
     @GetMapping
     public ResponseEntity<List<Warehouse>> getAllWarehouse() {
