@@ -48,11 +48,8 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    public List<Product> getProductByCategoryId(Long categoryId) {
-        List<Product> products = getAllProduct();
-
-        return products.stream().filter(
-                product -> product.getCategory().getId().equals(categoryId)).toList();
+    public List<Product> getProductsByCategoryId(Long categoryId) {
+        return productRepository.findByCategoryId(categoryId);
     }
 
     public List<Product> getAllProduct() {

@@ -32,7 +32,7 @@ public class ProductController {
     public ResponseEntity<List<Product>> getAllProductByCategoryId(
             @PathVariable(name = "category_id") Long categoryId) {
 
-        List<Product> products = productService.getProductByCategoryId(categoryId);
+        List<Product> products = productService.getProductsByCategoryId(categoryId);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 

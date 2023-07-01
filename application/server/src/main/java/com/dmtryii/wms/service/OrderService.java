@@ -40,10 +40,7 @@ public class OrderService {
     }
 
     public List<Order> getAllOrderByUserId(Long userId) {
-        List<Order> orders = getAllOrder();
-
-        return orders.stream().filter(
-                order -> order.getUser().getId().equals(userId)).toList();
+        return orderRepository.findAllByUserId(userId);
     }
 
     public List<Order> getAllOrder() {
