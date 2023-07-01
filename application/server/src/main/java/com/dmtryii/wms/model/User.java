@@ -48,7 +48,7 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"))
     private Set<ERole> roles;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "city_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private City city;
