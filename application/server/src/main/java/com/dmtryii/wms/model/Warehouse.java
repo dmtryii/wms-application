@@ -17,6 +17,7 @@ public class Warehouse {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "warehouse_id")
     private Long id;
+    @Column(nullable = false, unique = true)
     private String name;
     private String address;
     @ManyToOne(fetch = FetchType.EAGER, optional = false)

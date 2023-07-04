@@ -54,6 +54,10 @@ public class WarehouseService {
         return warehouseRepository.findAll();
     }
 
+    public Warehouse getWarehouseByName(String name) {
+        return warehouseRepository.findWarehouseByName(name);
+    }
+
     public Warehouse getWarehouseById(Long warehouseId) {
         return warehouseRepository.findById(warehouseId).orElseThrow(
                 () -> new NotFoundException("The warehouse was not found by this id")

@@ -17,10 +17,12 @@ public class Supplier {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "supplier_id")
     private Long id;
+    @Column(name = "company_name")
+    private String companyName;
+    private Double rating;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
     private User user;
     @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL)
     @JsonIgnore
