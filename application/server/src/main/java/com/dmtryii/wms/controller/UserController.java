@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping("api/user")
 @RequiredArgsConstructor
 public class UserController {
-    private UserService userService;
+    private final UserService userService;
 
     @GetMapping
     public ResponseEntity<List<UserDTO>> getAllUser() {

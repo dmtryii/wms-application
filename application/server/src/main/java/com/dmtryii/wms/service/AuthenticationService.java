@@ -7,6 +7,7 @@ import com.dmtryii.wms.model.User;
 import com.dmtryii.wms.model.enums.ERole;
 import com.dmtryii.wms.repository.UserRepository;
 import com.dmtryii.wms.security.JwtService;
+import com.dmtryii.wms.validation.RegisterValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,8 +24,12 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final RegisterValidator registerValidator;
 
     public AuthenticationResponse register(RegisterRequest request) {
+
+        registerValidator.validate(request);
+
         var user = User.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
