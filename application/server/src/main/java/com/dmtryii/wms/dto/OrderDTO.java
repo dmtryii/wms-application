@@ -1,11 +1,11 @@
 package com.dmtryii.wms.dto;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.time.LocalDate;
 
-@Data
-@NoArgsConstructor
-public class OrderDTO {
-    private Long id;
-    private String details;
+public record OrderDTO(
+        Long id,
+        LocalDate dataOfOrder,
+        String details,
+        UserDTO user
+) {
 }
