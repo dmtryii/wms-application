@@ -1,46 +1,41 @@
 package com.dmtryii.wms.service;
 
-import com.dmtryii.wms.dto.CityDTO;
 import com.dmtryii.wms.exception.NotFoundException;
 import com.dmtryii.wms.model.City;
 import com.dmtryii.wms.model.OrderLine;
 import com.dmtryii.wms.repository.CityRepository;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CityService {
     public static final Logger LOG = LoggerFactory.getLogger(OrderLine.class);
     private final CityRepository cityRepository;
 
-    @Autowired
-    public CityService(CityRepository cityRepository) {
-        this.cityRepository = cityRepository;
-    }
-
-    public City createCity(CityDTO cityDTO) {
+    public City createCity(City cityRequest) {
         City city = new City();
-        city.setName(cityDTO.getName());
-        city.setCountry(cityDTO.getCountry());
-        city.setLongitude(cityDTO.getLongitude());
-        city.setLatitude(cityDTO.getLatitude());
+        city.setName(cityRequest.getName());
+        city.setCountry(cityRequest.getCountry());
+        city.setLongitude(cityRequest.getLongitude());
+        city.setLatitude(cityRequest.getLatitude());
 
         LOG.info("The city of {} was created", city.getName());
         return cityRepository.save(city);
     }
 
-    public City updateCity(Long cityId, CityDTO cityDTO) {
+    public City updateCity(Long cityId, City cityRequest) {
         City city = getCityById(cityId);
-        city.setName(cityDTO.getName());
-        city.setCountry(cityDTO.getCountry());
-        city.setLongitude(cityDTO.getLongitude());
-        city.setLatitude(cityDTO.getLatitude());
+        city.setName(cityRequest.getName());
+        city.setCountry(cityRequest.getCountry());
+        city.setLongitude(cityRequest.getLongitude());
+        city.setLatitude(cityRequest.getLatitude());
 
-        LOG.info("The city of {} has been updated", city.getName());
+        LOG.info("The city {} was updated", city.getName());
         return cityRepository.save(city);
     }
 
@@ -48,14 +43,14 @@ public class CityService {
         return cityRepository.findAll();
     }
 
-    public City getCityById(Long id) {
-        return cityRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("The city was not found by this id")
+    public City getCityById(Long cityId) {
+        return cityRepository.findById(cityId).orElseThrow(
+                () -> new NotFoundException("The city not fount by id: " + cityId)
         );
     }
 
-    public void deleteCity(Long cityId) {
-        City city = getCityById(cityId);
+    public void deleteCityById(Long cityId) {
         cityRepository.deleteById(cityId);
+        LOG.info("The city from id {} was deleted", cityId);
     }
 }
