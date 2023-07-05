@@ -1,42 +1,37 @@
 package com.dmtryii.wms.service;
 
-import com.dmtryii.wms.dto.CategoryDTO;
 import com.dmtryii.wms.exception.NotFoundException;
 import com.dmtryii.wms.model.Category;
 import com.dmtryii.wms.model.OrderLine;
 import com.dmtryii.wms.repository.CategoryRepository;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CategoryService {
     public static final Logger LOG = LoggerFactory.getLogger(OrderLine.class);
     private final CategoryRepository categoryRepository;
 
-    @Autowired
-    public CategoryService(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
-    }
-
-    public Category createCategory(CategoryDTO categoryDTO) {
+    public Category createCategory(Category categoryRequest) {
         Category category = new Category();
-        category.setName(categoryDTO.getName());
-        category.setDescription(categoryDTO.getDescription());
+        category.setName(categoryRequest.getName());
+        category.setDescription(categoryRequest.getDescription());
 
-        LOG.info("The category of {} was created", category.getName());
+        LOG.info("The {} category was created", category.getName());
         return categoryRepository.save(category);
     }
 
-    public Category updateCategory(Long categoryId, CategoryDTO categoryDTO) {
+    public Category updateCategory(Long categoryId, Category categoryRequest) {
         Category category = getCategoryById(categoryId);
-        category.setName(categoryDTO.getName());
-        category.setDescription(categoryDTO.getDescription());
+        category.setName(categoryRequest.getName());
+        category.setDescription(categoryRequest.getDescription());
 
-        LOG.info("The category of {} has been updated", category.getName());
+        LOG.info("The category {} was updated", category.getName());
         return categoryRepository.save(category);
     }
 
@@ -46,7 +41,7 @@ public class CategoryService {
 
     public Category getCategoryById(Long categoryId) {
         return categoryRepository.findById(categoryId).orElseThrow(
-                () -> new NotFoundException("The category was not found by this id")
+                () -> new NotFoundException("The category not fount by id: " + categoryId)
         );
     }
 
