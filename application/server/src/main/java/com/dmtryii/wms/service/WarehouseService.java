@@ -39,7 +39,7 @@ public class WarehouseService {
 
     public Warehouse updateWarehouse(Long warehouseId, WarehouseDTO warehouseDTO) {
         Warehouse warehouse = getWarehouseById(warehouseId);
-        warehouse.setName(warehouseDTO.getName());
+        warehouse.setName(warehouseDTO.name());
         warehouse.setAddress(warehouse.getAddress());
 
         LOG.info("The warehouse from ID {} has been updated", warehouseId);
