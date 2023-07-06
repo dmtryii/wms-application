@@ -1,36 +1,38 @@
 package com.dmtryii.wms.service;
 
+import com.dmtryii.wms.dto.request.AddressRequest;
 import com.dmtryii.wms.dto.WarehouseDTO;
 import com.dmtryii.wms.exception.NotFoundException;
+import com.dmtryii.wms.model.Address;
 import com.dmtryii.wms.model.OrderLine;
 import com.dmtryii.wms.model.Warehouse;
+import com.dmtryii.wms.repository.AddressRepository;
 import com.dmtryii.wms.repository.WarehouseRepository;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class WarehouseService {
     public static final Logger LOG = LoggerFactory.getLogger(OrderLine.class);
     private final WarehouseRepository warehouseRepository;
     private final CityService cityService;
+    private final AddressRepository addressRepository;
 
-    @Autowired
-    public WarehouseService(WarehouseRepository warehouseRepository, CityService cityService) {
-        this.warehouseRepository = warehouseRepository;
-        this.cityService = cityService;
-    }
+    public Warehouse createWarehouse(AddressRequest addressRequest, Long cityId) {
 
-    public Warehouse createWarehouse(Long cityId, WarehouseDTO warehouseDTO) {
+        Address address = Address.builder()
+                .currentName(addressRequest.currentAddressName())
+                .city(cityService.getCityById(cityId))
+                .build();
+        addressRepository.save(address);
+
         Warehouse warehouse = new Warehouse();
-        warehouse.setName(warehouseDTO.getName());
-        warehouse.setAddress(warehouseDTO.getAddress());
-        warehouse.setCity(
-                cityService.getCityById(cityId)
-        );
+        warehouse.setAddress(address);
 
         return warehouseRepository.save(warehouse);
     }
@@ -47,7 +49,9 @@ public class WarehouseService {
     public List<Warehouse> getAllWarehousesByCityId(Long cityId) {
         List<Warehouse> warehouses = getAllWarehouse();
         return warehouses.stream().filter(
-                w -> w.getCity().getId().equals(cityId)).toList();
+                w -> w.getAddress()
+                        .getCity()
+                        .getId().equals(cityId)).toList();
     }
 
     public List<Warehouse> getAllWarehouse() {

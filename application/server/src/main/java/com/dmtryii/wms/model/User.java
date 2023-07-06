@@ -2,7 +2,6 @@ package com.dmtryii.wms.model;
 
 import com.dmtryii.wms.model.enums.ERole;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,28 +29,21 @@ public class User implements UserDetails {
     private String username;
     @Column(length = 3000)
     private String password;
-    @Column(unique = true)
-    private String email;
-    @Column(unique = true)
-    private String phone;
-    private String address;
-    private String firstName;
-    private String lastName;
-    @Column(columnDefinition = "text")
-    private String bio;
     @JsonFormat(pattern = "yyyy-mm-dd HH:mm:ss")
     @Column(updatable = false)
     private LocalDateTime createData;
-
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "contacts_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Contacts contacts;
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "address_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Address address;
     @ElementCollection(targetClass = ERole.class)
     @CollectionTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"))
     private Set<ERole> roles;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "city_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private City city;
 
     @Transient
     private Collection<? extends GrantedAuthority> authorities;

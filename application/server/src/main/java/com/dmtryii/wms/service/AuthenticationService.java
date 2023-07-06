@@ -3,8 +3,12 @@ package com.dmtryii.wms.service;
 import com.dmtryii.wms.auth.AuthenticationRequest;
 import com.dmtryii.wms.auth.AuthenticationResponse;
 import com.dmtryii.wms.auth.RegisterRequest;
+import com.dmtryii.wms.model.Address;
+import com.dmtryii.wms.model.Contacts;
 import com.dmtryii.wms.model.User;
 import com.dmtryii.wms.model.enums.ERole;
+import com.dmtryii.wms.repository.AddressRepository;
+import com.dmtryii.wms.repository.ContactsRepository;
 import com.dmtryii.wms.repository.UserRepository;
 import com.dmtryii.wms.security.JwtService;
 import com.dmtryii.wms.validation.RegisterValidator;
@@ -21,6 +25,8 @@ import java.util.Collections;
 public class AuthenticationService {
 
     private final UserRepository userRepository;
+    private final ContactsRepository contactsRepository;
+    private final AddressRepository addressRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -32,8 +38,13 @@ public class AuthenticationService {
 
         var user = User.builder()
                 .username(request.getUsername())
-                .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .contacts(
+                        contactsRepository.save(new Contacts(request.getEmail()))
+                )
+                .address(
+                        addressRepository.save(new Address())
+                )
                 .roles(Collections.singleton(ERole.CUSTOMER))
                 .build();
 

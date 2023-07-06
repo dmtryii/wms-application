@@ -1,5 +1,6 @@
 package com.dmtryii.wms.dto;
 
+import com.dmtryii.wms.model.Address;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -11,5 +12,5 @@ public class WarehouseDTO {
     @NonNull
     private String name;
     @NonNull
-    private String address;
+    private Address address;
 }

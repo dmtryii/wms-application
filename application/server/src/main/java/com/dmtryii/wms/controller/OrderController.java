@@ -1,9 +1,10 @@
 package com.dmtryii.wms.controller;
 
 import com.dmtryii.wms.dto.OrderDTO;
+import com.dmtryii.wms.dto.OrderLineDTO;
 import com.dmtryii.wms.dto.request.OrderRequest;
 import com.dmtryii.wms.service.OrderService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +13,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/order")
+@RequiredArgsConstructor
 public class OrderController {
-    @Autowired
-    private OrderService orderService;
+    private final OrderService orderService;
 
     @GetMapping
     public ResponseEntity<List<OrderDTO>> getAllOrder() {
@@ -45,6 +46,14 @@ public class OrderController {
                                                 @RequestBody OrderRequest orderRequest) {
         OrderDTO order = orderService.updateOrder(orderId, orderRequest);
         return new ResponseEntity<>(order, HttpStatus.OK);
+    }
+
+    @PostMapping("/order/{order_id}/product/{product_id}/amount/{amount}")
+    public ResponseEntity<OrderLineDTO> addProductToOrder(@PathVariable(name = "order_id") Long orderId,
+                                                          @PathVariable(name = "product_id") Long productId,
+                                                          @PathVariable(name = "amount") int amount) {
+        OrderLineDTO orderLine = orderService.addProductToOrder(orderId, productId, amount);
+        return new ResponseEntity<>(orderLine, HttpStatus.OK);
     }
 
     @DeleteMapping("{order_id}")

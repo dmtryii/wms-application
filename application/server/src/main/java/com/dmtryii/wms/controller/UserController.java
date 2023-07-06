@@ -1,6 +1,9 @@
 package com.dmtryii.wms.controller;
 
+import com.dmtryii.wms.dto.request.AddressRequest;
+import com.dmtryii.wms.dto.request.ContactsUpdateRequest;
 import com.dmtryii.wms.dto.UserDTO;
+import com.dmtryii.wms.model.User;
 import com.dmtryii.wms.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,5 +22,20 @@ public class UserController {
     public ResponseEntity<List<UserDTO>> getAllUser() {
         List<UserDTO> users = userService.getAllUser();
         return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @PostMapping("/{username}")
+    public ResponseEntity<User> updateUserContacts(@PathVariable String username,
+                                                   @RequestBody ContactsUpdateRequest contactsUpdateRequest) {
+        User user = userService.updateUserContacts(username, contactsUpdateRequest);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @PostMapping("/{username}/city/{city_id}")
+    public ResponseEntity<User> updateUserAddress(@PathVariable String username,
+                                                  @PathVariable(name = "city_id") Long cityId,
+                                                  @RequestBody AddressRequest addressUpdateRequest) {
+        User user = userService.updateUserAddress(username, cityId, addressUpdateRequest);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 }

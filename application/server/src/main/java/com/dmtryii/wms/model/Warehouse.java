@@ -17,13 +17,11 @@ public class Warehouse {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "warehouse_id")
     private Long id;
-    @Column(nullable = false, unique = true)
     private String name;
-    private String address;
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "city_id", nullable = false)
+    @JoinColumn(name = "address_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private City city;
+    private Address address;
     @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Location> location;

@@ -13,15 +13,10 @@ public class UserDTOMapper implements Function<User, UserDTO> {
         return new UserDTO(
                 user.getId(),
                 user.getUsername(),
-                user.getEmail(),
-                user.getPhone(),
+                user.getContacts(),
                 user.getAddress(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getBio(),
                 user.getCreateData(),
-                user.getRoles(),
-                user.getCity()
+                user.getRoles()
         );
     }
 }

@@ -1,5 +1,6 @@
 package com.dmtryii.wms.controller;
 
+import com.dmtryii.wms.dto.request.AddressRequest;
 import com.dmtryii.wms.dto.WarehouseDTO;
 import com.dmtryii.wms.model.Location;
 import com.dmtryii.wms.model.Warehouse;
@@ -42,8 +43,8 @@ public class WarehouseController {
 
     @PostMapping("{city_id}/city")
     public ResponseEntity<Warehouse> createWarehouse(@PathVariable(name = "city_id") Long cityId,
-                                                     @RequestBody WarehouseDTO warehouseDTO) {
-        Warehouse warehouse = warehouseService.createWarehouse(cityId, warehouseDTO);
+                                                     @RequestBody AddressRequest addressRequest) {
+        Warehouse warehouse = warehouseService.createWarehouse(addressRequest, cityId);
         return new ResponseEntity<>(warehouse, HttpStatus.CREATED);
     }
 
