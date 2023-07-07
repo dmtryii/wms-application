@@ -1,9 +1,8 @@
 package com.dmtryii.wms.controller;
 
-import com.dmtryii.wms.dto.ItemDTO;
 import com.dmtryii.wms.model.Item;
 import com.dmtryii.wms.service.ItemService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +11,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/item")
+@RequiredArgsConstructor
 public class ItemController {
-    @Autowired
-    private ItemService itemService;
+    private final ItemService itemService;
 
     @GetMapping
     public ResponseEntity<List<Item>> getAllItem() {
@@ -29,15 +28,15 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Item> createItem(@RequestBody ItemDTO itemDTO) {
-        Item item = itemService.createItem(itemDTO);
+    public ResponseEntity<Item> createItem(@RequestBody Item itemRequest) {
+        Item item = itemService.createItem(itemRequest);
         return new ResponseEntity<>(item, HttpStatus.CREATED);
     }
 
     @PostMapping("{item_id}")
     public ResponseEntity<Item> updateItem(@PathVariable(name = "item_id") Long itemId,
-                                           @RequestBody ItemDTO itemDTO) {
-        Item item = itemService.updateItem(itemId, itemDTO);
+                                           @RequestBody Item itemRequest) {
+        Item item = itemService.updateItem(itemId, itemRequest);
         return new ResponseEntity<>(item, HttpStatus.OK);
     }
 

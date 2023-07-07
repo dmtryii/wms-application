@@ -21,7 +21,7 @@ public class Employee {
     @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "warehouse_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Warehouse warehouse;

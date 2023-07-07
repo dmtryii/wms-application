@@ -2,6 +2,10 @@ package com.dmtryii.wms.controller;
 
 import com.dmtryii.wms.dto.EmployeeDTO;
 import com.dmtryii.wms.dto.SupplierDTO;
+import com.dmtryii.wms.dto.request.EmployeeRequest;
+import com.dmtryii.wms.dto.request.SupplierRequest;
+import com.dmtryii.wms.dto_mapper.EmployeeDTOMapper;
+import com.dmtryii.wms.dto_mapper.SupplierDTOMapper;
 import com.dmtryii.wms.model.Employee;
 import com.dmtryii.wms.model.Supplier;
 import com.dmtryii.wms.service.EmployeeService;
@@ -19,28 +23,36 @@ import java.util.List;
 public class RoleController {
     private final EmployeeService employeeService;
     private final SupplierService supplierService;
+    private final EmployeeDTOMapper employeeDTOMapper;
+    private final SupplierDTOMapper supplierDTOMapper;
 
     @PostMapping("/employee")
-    public ResponseEntity<Employee> createEmployee(@RequestBody EmployeeDTO employeeDTO) {
-        Employee employee = employeeService.createEmployee(employeeDTO);
-        return new ResponseEntity<>(employee, HttpStatus.CREATED);
+    public ResponseEntity<EmployeeDTO> createEmployee(@RequestBody EmployeeRequest employeeRequest) {
+        Employee employee = employeeService.createEmployee(employeeRequest);
+        return new ResponseEntity<>(
+                employeeDTOMapper.apply(employee),
+                HttpStatus.CREATED
+        );
     }
 
     @PostMapping("/supplier")
-    public ResponseEntity<Supplier> createSupplier(@RequestBody SupplierDTO supplierDTO) {
-        Supplier supplier = supplierService.createSupplier(supplierDTO);
-        return new ResponseEntity<>(supplier, HttpStatus.CREATED);
+    public ResponseEntity<SupplierDTO> createSupplier(@RequestBody SupplierRequest supplierRequest) {
+        Supplier supplier = supplierService.createSupplier(supplierRequest);
+        return new ResponseEntity<>(
+                supplierDTOMapper.apply(supplier),
+                HttpStatus.CREATED
+        );
     }
 
     @GetMapping("/employees")
-    public ResponseEntity<List<Employee>> getAllEmployee() {
-        List<Employee> employees = employeeService.getAllEmployees();
+    public ResponseEntity<List<EmployeeDTO>> getAllEmployee() {
+        List<EmployeeDTO> employees = employeeService.getAllEmployees();
         return new ResponseEntity<>(employees, HttpStatus.OK);
     }
 
     @GetMapping("/suppliers")
-    public ResponseEntity<List<Supplier>> getAllSuppliers() {
-        List<Supplier> suppliers = supplierService.getAllSuppliers();
+    public ResponseEntity<List<SupplierDTO>> getAllSuppliers() {
+        List<SupplierDTO> suppliers = supplierService.getAllSuppliers();
         return new ResponseEntity<>(suppliers, HttpStatus.OK);
     }
 }
