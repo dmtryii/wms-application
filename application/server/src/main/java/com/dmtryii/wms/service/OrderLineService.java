@@ -1,7 +1,7 @@
 package com.dmtryii.wms.service;
 
 
-import com.dmtryii.wms.exception.NotFoundException;
+import com.dmtryii.wms.exception.ResourceNotFoundException;
 import com.dmtryii.wms.model.Order;
 import com.dmtryii.wms.model.OrderLine;
 import com.dmtryii.wms.model.Product;
@@ -34,10 +34,10 @@ public class OrderLineService {
     public OrderLine addProductToOrder(Long orderId, Long productId, int amount) {
 
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new NotFoundException(""));
+                .orElseThrow(() -> new ResourceNotFoundException(""));
 
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NotFoundException(""));
+                .orElseThrow(() -> new ResourceNotFoundException(""));
 
         OrderLine orderLine = new OrderLine(
                 order,

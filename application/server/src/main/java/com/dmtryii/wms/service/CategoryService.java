@@ -1,6 +1,6 @@
 package com.dmtryii.wms.service;
 
-import com.dmtryii.wms.exception.NotFoundException;
+import com.dmtryii.wms.exception.ResourceNotFoundException;
 import com.dmtryii.wms.model.Category;
 import com.dmtryii.wms.model.OrderLine;
 import com.dmtryii.wms.repository.CategoryRepository;
@@ -41,7 +41,7 @@ public class CategoryService {
 
     public Category getCategoryById(Long categoryId) {
         return categoryRepository.findById(categoryId).orElseThrow(
-                () -> new NotFoundException("The category not fount by id: " + categoryId)
+                () -> new ResourceNotFoundException("The category not fount by id: " + categoryId)
         );
     }
 

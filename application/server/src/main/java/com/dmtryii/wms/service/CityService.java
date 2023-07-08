@@ -1,6 +1,6 @@
 package com.dmtryii.wms.service;
 
-import com.dmtryii.wms.exception.NotFoundException;
+import com.dmtryii.wms.exception.ResourceNotFoundException;
 import com.dmtryii.wms.model.City;
 import com.dmtryii.wms.model.OrderLine;
 import com.dmtryii.wms.repository.CityRepository;
@@ -45,7 +45,7 @@ public class CityService {
 
     public City getCityById(Long cityId) {
         return cityRepository.findById(cityId).orElseThrow(
-                () -> new NotFoundException("The city not fount by id: " + cityId)
+                () -> new ResourceNotFoundException("The city not fount by id: " + cityId)
         );
     }
 

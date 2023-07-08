@@ -1,6 +1,6 @@
 package com.dmtryii.wms.service;
 
-import com.dmtryii.wms.exception.NotFoundException;
+import com.dmtryii.wms.exception.ResourceNotFoundException;
 import com.dmtryii.wms.model.Item;
 import com.dmtryii.wms.model.OrderLine;
 import com.dmtryii.wms.repository.ItemRepository;
@@ -43,7 +43,7 @@ public class ItemService {
 
     public Item getItemById(Long itemId) {
         return itemRepository.findById(itemId).orElseThrow(
-                () -> new NotFoundException(String.format("Item not found: %s", itemId))
+                () -> new ResourceNotFoundException(String.format("Item not found: %s", itemId))
         );
     }
 

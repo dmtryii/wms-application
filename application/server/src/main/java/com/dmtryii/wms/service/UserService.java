@@ -4,7 +4,7 @@ import com.dmtryii.wms.dto.request.AddressRequest;
 import com.dmtryii.wms.dto.request.ContactsUpdateRequest;
 import com.dmtryii.wms.dto.UserDTO;
 import com.dmtryii.wms.dto_mapper.UserDTOMapper;
-import com.dmtryii.wms.exception.NotFoundException;
+import com.dmtryii.wms.exception.ResourceNotFoundException;
 import com.dmtryii.wms.model.Address;
 import com.dmtryii.wms.model.Contacts;
 import com.dmtryii.wms.model.User;
@@ -28,7 +28,7 @@ public class UserService {
 
     public User getUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(
-                () -> new NotFoundException("User not fount by id: " + userId)
+                () -> new ResourceNotFoundException("User not fount by id: " + userId)
         );
     }
 
@@ -70,7 +70,7 @@ public class UserService {
 
     public User getUserByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(
-                () -> new NotFoundException(String.format("User not found on given username: %s", username))
+                () -> new ResourceNotFoundException(String.format("User not found on given username: %s", username))
         );
     }
 

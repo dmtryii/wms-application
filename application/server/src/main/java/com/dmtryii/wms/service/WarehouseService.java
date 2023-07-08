@@ -2,7 +2,7 @@ package com.dmtryii.wms.service;
 
 import com.dmtryii.wms.dto.request.AddressRequest;
 import com.dmtryii.wms.dto.WarehouseDTO;
-import com.dmtryii.wms.exception.NotFoundException;
+import com.dmtryii.wms.exception.ResourceNotFoundException;
 import com.dmtryii.wms.model.Address;
 import com.dmtryii.wms.model.OrderLine;
 import com.dmtryii.wms.model.Warehouse;
@@ -64,7 +64,7 @@ public class WarehouseService {
 
     public Warehouse getWarehouseById(Long warehouseId) {
         return warehouseRepository.findById(warehouseId).orElseThrow(
-                () -> new NotFoundException("The warehouse was not found by this id")
+                () -> new ResourceNotFoundException("The warehouse not fount by id: " + warehouseId)
         );
     }
 

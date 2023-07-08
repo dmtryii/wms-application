@@ -5,7 +5,7 @@ import com.dmtryii.wms.dto.OrderLineDTO;
 import com.dmtryii.wms.dto.request.OrderRequest;
 import com.dmtryii.wms.dto_mapper.OrderDTOMapper;
 import com.dmtryii.wms.dto_mapper.OrderLineDTOMapper;
-import com.dmtryii.wms.exception.NotFoundException;
+import com.dmtryii.wms.exception.ResourceNotFoundException;
 import com.dmtryii.wms.model.Order;
 import com.dmtryii.wms.model.OrderLine;
 import com.dmtryii.wms.model.Product;
@@ -48,7 +48,7 @@ public class OrderService {
     public OrderDTO updateOrder(Long orderId, OrderRequest orderRequest) {
 
         Order order = orderRepository.findById(orderId).orElseThrow(
-                () -> new NotFoundException("")
+                () -> new ResourceNotFoundException("")
         );
 
         order.setDetails(orderRequest.details());
@@ -97,7 +97,7 @@ public class OrderService {
 
     public OrderDTO getOrderById(Long orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(
-                () -> new NotFoundException("Order not fount by id: " + orderId)
+                () -> new ResourceNotFoundException("Order not fount by id: " + orderId)
         );
         return orderDTOMapper.apply(order);
     }

@@ -1,6 +1,6 @@
 package com.dmtryii.wms.service;
 
-import com.dmtryii.wms.exception.NotFoundException;
+import com.dmtryii.wms.exception.ResourceNotFoundException;
 import com.dmtryii.wms.model.Category;
 import com.dmtryii.wms.model.OrderLine;
 import com.dmtryii.wms.model.Product;
@@ -52,7 +52,7 @@ public class ProductService {
 
     public Product getProductById(Long productId) {
         return productRepository.findById(productId).orElseThrow(
-                () -> new NotFoundException("The city was not found by this id")
+                () -> new ResourceNotFoundException("The product not fount by id: " + productId)
         );
     }
 
