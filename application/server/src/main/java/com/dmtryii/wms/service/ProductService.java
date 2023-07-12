@@ -2,7 +2,6 @@ package com.dmtryii.wms.service;
 
 import com.dmtryii.wms.exception.ResourceNotFoundException;
 import com.dmtryii.wms.model.Category;
-import com.dmtryii.wms.model.OrderLine;
 import com.dmtryii.wms.model.Product;
 import com.dmtryii.wms.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +14,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ProductService {
-    public static final Logger LOG = LoggerFactory.getLogger(OrderLine.class);
+    public static final Logger LOG = LoggerFactory.getLogger(Product.class);
     private final ProductRepository productRepository;
     private final CategoryService categoryService;
 

@@ -2,6 +2,7 @@ package com.dmtryii.wms.controller;
 
 import com.dmtryii.wms.dto.request.AddressRequest;
 import com.dmtryii.wms.dto.WarehouseDTO;
+import com.dmtryii.wms.dto.request.LocationRequest;
 import com.dmtryii.wms.model.Location;
 import com.dmtryii.wms.model.Warehouse;
 import com.dmtryii.wms.service.LocationService;
@@ -14,17 +15,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/warehouse")
+@RequestMapping("api/warehouses")
 @RequiredArgsConstructor
 public class WarehouseController {
     private final WarehouseService warehouseService;
     private final LocationService locationService;
 
-    @PostMapping("{warehouse_id}/product/{product_id}/quantity/{quantity}")
-    public ResponseEntity<Location> addProductToWarehouse(@PathVariable(name = "warehouse_id") Long warehouseId,
-                                                          @PathVariable(name = "product_id") Long productId,
-                                                          @PathVariable(name = "quantity") int quantity) {
-        Location location = locationService.addProductToWarehouse(warehouseId, productId, quantity);
+    @PostMapping("/products")
+    public ResponseEntity<Location> addProductToWarehouse(LocationRequest locationRequest) {
+        Location location = locationService.addProductToWarehouse(locationRequest);
         return new ResponseEntity<>(location, HttpStatus.CREATED);
     }
 
@@ -40,21 +39,21 @@ public class WarehouseController {
         return new ResponseEntity<>(warehouse, HttpStatus.OK);
     }
 
-    @PostMapping("/city/{city_id}")
+    @PostMapping("/cites/{city_id}")
     public ResponseEntity<Warehouse> createWarehouse(@PathVariable(name = "city_id") Long cityId,
                                                      @RequestBody AddressRequest addressRequest) {
         Warehouse warehouse = warehouseService.createWarehouse(addressRequest, cityId);
         return new ResponseEntity<>(warehouse, HttpStatus.CREATED);
     }
 
-    @PostMapping("/{warehouse_id}")
+    @PutMapping("/{warehouse_id}")
     public ResponseEntity<Warehouse> updateWarehouse(@PathVariable(name = "warehouse_id") Long warehouseId,
                                                      @RequestBody WarehouseDTO warehouseDTO) {
         Warehouse warehouse = warehouseService.updateWarehouse(warehouseId, warehouseDTO);
         return new ResponseEntity<>(warehouse, HttpStatus.OK);
     }
 
-    @GetMapping("/city/{city_id}")
+    @GetMapping("/cites/{city_id}")
     public ResponseEntity<List<Warehouse>> getAllWarehousesByCityId(@PathVariable(name = "city_id") Long cityId) {
         List<Warehouse> warehouses = warehouseService.getAllWarehousesByCityId(cityId);
         return new ResponseEntity<>(warehouses, HttpStatus.OK);

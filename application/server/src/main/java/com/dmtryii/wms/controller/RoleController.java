@@ -26,7 +26,7 @@ public class RoleController {
     private final EmployeeDTOMapper employeeDTOMapper;
     private final SupplierDTOMapper supplierDTOMapper;
 
-    @PostMapping("/employee")
+    @PostMapping("/employees")
     public ResponseEntity<EmployeeDTO> createEmployee(@RequestBody EmployeeRequest employeeRequest) {
         Employee employee = employeeService.createEmployee(employeeRequest);
         return new ResponseEntity<>(
@@ -35,7 +35,7 @@ public class RoleController {
         );
     }
 
-    @PostMapping("/supplier")
+    @PostMapping("/suppliers")
     public ResponseEntity<SupplierDTO> createSupplier(@RequestBody SupplierRequest supplierRequest) {
         Supplier supplier = supplierService.createSupplier(supplierRequest);
         return new ResponseEntity<>(

@@ -11,20 +11,20 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/city")
+@RequestMapping("api/cities")
 public class CityController {
     private final CityService cityService;
+
+    @GetMapping
+    public ResponseEntity<List<City>> getAllCity() {
+        List<City> cities = cityService.getAllCity();
+        return new ResponseEntity<>(cities, HttpStatus.OK);
+    }
 
     @GetMapping("/{city_id}")
     public ResponseEntity<City> getCityById(@PathVariable(name = "city_id") Long cityId) {
         City city = cityService.getCityById(cityId);
         return new ResponseEntity<>(city, HttpStatus.OK);
-    }
-
-    @GetMapping("/cities")
-    public ResponseEntity<List<City>> getAllCity() {
-        List<City> cities = cityService.getAllCity();
-        return new ResponseEntity<>(cities, HttpStatus.OK);
     }
 
     @PostMapping
@@ -33,7 +33,7 @@ public class CityController {
         return new ResponseEntity<>(city, HttpStatus.CREATED);
     }
 
-    @PostMapping("/{city_id}")
+    @PutMapping("/{city_id}")
     public ResponseEntity<City> updateCity(@PathVariable(name = "city_id") Long cityId,
                                            @RequestBody City cityRequest) {
         City city = cityService.updateCity(cityId, cityRequest);

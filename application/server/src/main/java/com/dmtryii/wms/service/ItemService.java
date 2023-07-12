@@ -43,7 +43,7 @@ public class ItemService {
 
     public Item getItemById(Long itemId) {
         return itemRepository.findById(itemId).orElseThrow(
-                () -> new ResourceNotFoundException(String.format("Item not found: %s", itemId))
+                () -> new ResourceNotFoundException("Item not found: " + itemId)
         );
     }
 

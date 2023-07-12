@@ -2,6 +2,7 @@ package com.dmtryii.wms.service;
 
 import com.dmtryii.wms.dto.OrderDTO;
 import com.dmtryii.wms.dto.OrderLineDTO;
+import com.dmtryii.wms.dto.request.OrderLineRequest;
 import com.dmtryii.wms.dto.request.OrderRequest;
 import com.dmtryii.wms.dto_mapper.OrderDTOMapper;
 import com.dmtryii.wms.dto_mapper.OrderLineDTOMapper;
@@ -17,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,7 +26,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class OrderService {
-    public static final Logger LOG = LoggerFactory.getLogger(OrderLine.class);
+    public static final Logger LOG = LoggerFactory.getLogger(Order.class);
     private final OrderDTOMapper orderDTOMapper;
     private final OrderLineDTOMapper orderLineDTOMapper;
     private final OrderRepository orderRepository;
@@ -32,8 +34,8 @@ public class OrderService {
     private final ProductService productService;
     private final UserService userService;
 
-    public OrderDTO createOrder(OrderRequest orderRequest) {
-        User user = userService.getUserByUsername(orderRequest.username());
+    public OrderDTO createOrder(OrderRequest orderRequest, Principal principal) {
+        User user = userService.getUserByPrincipal(principal);
 
         Order order = new Order();
         order.setDataOfOrder(LocalDate.now());
@@ -57,16 +59,16 @@ public class OrderService {
         return orderDTOMapper.apply(order);
     }
 
-    public OrderLineDTO addProductToOrder(Long orderId, Long productId, int amount) {
-        Order order = orderRepository.findById(orderId).orElseThrow();
-        Product product = productService.getProductById(productId);
+    public OrderLineDTO addProductToOrder(OrderLineRequest orderLineRequest) {
+        Order order = getOrderById(orderLineRequest.orderId());
+        Product product = productService.getProductById(orderLineRequest.productId());
 
         OrderLine _orderLine = orderLineRepository
                 .findOrderLineByOrderAndProduct(order, product);
 
         if(_orderLine != null) {
             _orderLine.setAmount(
-                    _orderLine.getAmount() + amount
+                    _orderLine.getAmount() + orderLineRequest.amount()
             );
             orderLineRepository.save(_orderLine);
             return orderLineDTOMapper.apply(_orderLine);
@@ -75,7 +77,7 @@ public class OrderService {
         OrderLine orderLine = new OrderLine(
                 order,
                 product,
-                amount
+                orderLineRequest.amount()
         );
         orderLineRepository.save(orderLine);
         return orderLineDTOMapper.apply(orderLine);
@@ -95,11 +97,10 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    public OrderDTO getOrderById(Long orderId) {
-        Order order = orderRepository.findById(orderId).orElseThrow(
+    public Order getOrderById(Long orderId) {
+        return orderRepository.findById(orderId).orElseThrow(
                 () -> new ResourceNotFoundException("Order not fount by id: " + orderId)
         );
-        return orderDTOMapper.apply(order);
     }
 
     public void deleteOrderById(Long orderId) {

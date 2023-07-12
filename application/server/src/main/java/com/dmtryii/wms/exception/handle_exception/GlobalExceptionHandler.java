@@ -2,6 +2,7 @@ package com.dmtryii.wms.exception.handle_exception;
 
 import com.dmtryii.wms.exception.InvalidEmailException;
 import com.dmtryii.wms.exception.InvalidPasswordException;
+import com.dmtryii.wms.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,6 +13,16 @@ import java.util.Date;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorObject> handleUserNotFoundException(UserNotFoundException ex,
+                                                                   WebRequest request) {
+        return handle_BAD_REQUEST(
+                ex,
+                request
+        );
+    }
+
     @ExceptionHandler(InvalidEmailException.class)
     public ResponseEntity<ErrorObject> handleInvalidEmailException(InvalidEmailException ex,
                                                                    WebRequest request) {

@@ -1,7 +1,7 @@
 package com.dmtryii.wms.service;
 
+import com.dmtryii.wms.dto.request.LocationRequest;
 import com.dmtryii.wms.model.Location;
-import com.dmtryii.wms.model.OrderLine;
 import com.dmtryii.wms.repository.LocationRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class LocationService {
-    public static final Logger LOG = LoggerFactory.getLogger(OrderLine.class);
+    public static final Logger LOG = LoggerFactory.getLogger(Location.class);
     private final LocationRepository locationRepository;
     private final ProductService productService;
     private final WarehouseService warehouseService;
@@ -27,9 +27,16 @@ public class LocationService {
                 .findLocationByWarehouseIdAndProductId(warehouseId, productId);
     }
 
-    public Location addProductToWarehouse(Long warehouseId, Long productId, int quantity) {
+    public Location addProductToWarehouse(LocationRequest locationRequest) {
 
-        Location _location = getLocation(warehouseId, productId);
+        Long warehouseId = locationRequest.warehouseId();
+        Long productId = locationRequest.productId();
+        int quantity = locationRequest.quantity();
+
+        Location _location = getLocation(
+                warehouseId,
+                productId
+        );
 
         if(_location != null) {
             updateQuantityProductsInWarehouse(_location, quantity);
@@ -42,12 +49,6 @@ public class LocationService {
         location.setQuantity(quantity);
 
         return locationRepository.save(location);
-    }
-
-    public int checkAvailabilityProductInWarehouse(Long warehouseId, Long productId) {
-        Location location = locationRepository
-                .findLocationByWarehouseIdAndProductId(warehouseId, productId);
-        return location.getQuantity();
     }
 
     private void updateQuantityProductsInWarehouse(Location location, int quantity) {

@@ -2,7 +2,6 @@ package com.dmtryii.wms.service;
 
 import com.dmtryii.wms.exception.ResourceNotFoundException;
 import com.dmtryii.wms.model.Category;
-import com.dmtryii.wms.model.OrderLine;
 import com.dmtryii.wms.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -14,7 +13,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
-    public static final Logger LOG = LoggerFactory.getLogger(OrderLine.class);
+    public static final Logger LOG = LoggerFactory.getLogger(Category.class);
     private final CategoryRepository categoryRepository;
 
     public Category createCategory(Category categoryRequest) {

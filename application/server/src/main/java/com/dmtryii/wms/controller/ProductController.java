@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/product")
+@RequestMapping("api/products")
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
@@ -21,35 +21,34 @@ public class ProductController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    @GetMapping("{product_id}")
+    @GetMapping("/{product_id}")
     public ResponseEntity<Product> getProductById(@PathVariable(name = "product_id") Long productId) {
         Product product = productService.getProductById(productId);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
-    @GetMapping("{category_id}/category")
+    @GetMapping("/categories/{category_id}")
     public ResponseEntity<List<Product>> getAllProductByCategoryId(
             @PathVariable(name = "category_id") Long categoryId) {
-
         List<Product> products = productService.getProductsByCategoryId(categoryId);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    @PostMapping("{category_id}/category")
+    @PostMapping("/categories/{category_id}")
     public ResponseEntity<Product> createProduct(@PathVariable(name = "category_id") Long categoryId,
                                                  @RequestBody Product productRequest) {
         Product product = productService.createProduct(categoryId, productRequest);
         return new ResponseEntity<>(product, HttpStatus.CREATED);
     }
 
-    @PostMapping("{product_id}")
+    @PutMapping("/{product_id}")
     public ResponseEntity<Product> updateProductById(@PathVariable(name = "product_id") Long productId,
-                                                 @RequestBody Product productRequest) {
+                                                     @RequestBody Product productRequest) {
         Product product = productService.updateProduct(productId, productRequest);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
-    @DeleteMapping("{product_id}")
+    @DeleteMapping("/{product_id}")
     public ResponseEntity<HttpStatus> deleteProductById(@PathVariable(name = "product_id") Long productId) {
         productService.deleteProductById(productId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

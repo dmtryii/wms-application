@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/item")
+@RequestMapping("api/items")
 @RequiredArgsConstructor
 public class ItemController {
     private final ItemService itemService;
@@ -21,7 +21,7 @@ public class ItemController {
         return new ResponseEntity<>(items, HttpStatus.OK);
     }
 
-    @GetMapping("{item_id}")
+    @GetMapping("/{item_id}")
     public ResponseEntity<Item> getItemById(@PathVariable(name = "item_id") Long itemId) {
         Item item = itemService.getItemById(itemId);
         return new ResponseEntity<>(item, HttpStatus.OK);
@@ -33,14 +33,14 @@ public class ItemController {
         return new ResponseEntity<>(item, HttpStatus.CREATED);
     }
 
-    @PostMapping("{item_id}")
+    @PutMapping("{item_id}")
     public ResponseEntity<Item> updateItem(@PathVariable(name = "item_id") Long itemId,
                                            @RequestBody Item itemRequest) {
         Item item = itemService.updateItem(itemId, itemRequest);
         return new ResponseEntity<>(item, HttpStatus.OK);
     }
 
-    @DeleteMapping("{item_id}")
+    @DeleteMapping("/{item_id}")
     public ResponseEntity<HttpStatus> deleteItemById(@PathVariable(name = "item_id") Long itemId) {
         itemService.deleteItemById(itemId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

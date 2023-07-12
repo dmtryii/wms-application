@@ -11,11 +11,11 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/category")
+@RequestMapping("api/categories")
 public class CategoryController {
     private final CategoryService categoryService;
 
-    @GetMapping("/categories")
+    @GetMapping
     private ResponseEntity<List<Category>> getAllCategory() {
         List<Category> categories = categoryService.getAllCategory();
         return new ResponseEntity<>(categories, HttpStatus.OK);
@@ -23,7 +23,6 @@ public class CategoryController {
 
     @GetMapping("/{category_id}")
     private ResponseEntity<Category> getCategoryById(@PathVariable(name = "category_id") Long id) {
-
         Category category = categoryService.getCategoryById(id);
         return new ResponseEntity<>(category, HttpStatus.OK);
     }
@@ -34,7 +33,7 @@ public class CategoryController {
         return new ResponseEntity<>(category, HttpStatus.CREATED);
     }
 
-    @PostMapping("/{category_id}")
+    @PutMapping("/{category_id}")
     public ResponseEntity<Category> updateCategory(@PathVariable(name = "category_id") Long categoryId,
                                                    @RequestBody Category categoryRequest) {
         Category category = categoryService.updateCategory(categoryId, categoryRequest);
