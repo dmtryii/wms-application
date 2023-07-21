@@ -28,5 +28,5 @@ public class Item {
     private Set<Stock> stock;
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
     @JsonIgnore
-    private Set<Supply> supply;
+    private Set<SupplyLine> supplyLine;
 }

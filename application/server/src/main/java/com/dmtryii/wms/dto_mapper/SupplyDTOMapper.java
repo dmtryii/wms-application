@@ -16,10 +16,10 @@ public class SupplyDTOMapper implements Function<Supply, SupplyDTO> {
     @Override
     public SupplyDTO apply(Supply supply) {
         return new SupplyDTO(
-                supply.getItem(),
+                supply.getId(),
                 employeeMapper.apply(supply.getEmployee()),
                 supplierMapper.apply(supply.getSupplier()),
-                supply.getAmount(),
+                supply.isState(),
                 supply.getDateOfSupply()
         );
     }

@@ -1,7 +1,7 @@
 package com.dmtryii.wms.dto.request;
 
-public record SupplyRequest(
-        Long supplierId,
+public record SupplyAddItemRequest(
+        Long supplyId,
         Long itemId,
         int amount
 ) {

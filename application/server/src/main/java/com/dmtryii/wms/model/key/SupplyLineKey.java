@@ -12,11 +12,11 @@ import java.io.Serializable;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Embeddable
-public class SupplyKey implements Serializable {
+public class SupplyLineKey implements Serializable {
+    @Column(name = "supply_id")
+    private Long supplyId;
     @Column(name = "item_id")
     private Long itemId;
     @Column(name = "employee_id")
     private Long employeeId;
-    @Column(name = "supplier_id")
-    private Long supplierId;
 }

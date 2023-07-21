@@ -1,8 +1,14 @@
 package com.dmtryii.wms.controller;
 
-import com.dmtryii.wms.dto.request.SupplyRequest;
+import com.dmtryii.wms.dto.SupplyDTO;
+import com.dmtryii.wms.dto.SupplyLineDTO;
+import com.dmtryii.wms.dto.request.SupplyAddItemRequest;
+import com.dmtryii.wms.dto.request.SupplyCreateRequest;
+import com.dmtryii.wms.dto_mapper.SupplyDTOMapper;
+import com.dmtryii.wms.dto_mapper.SupplyLineDTOMapper;
 import com.dmtryii.wms.model.Supply;
-import com.dmtryii.wms.service.EmployeeService;
+import com.dmtryii.wms.model.SupplyLine;
+import com.dmtryii.wms.service.SupplyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +23,27 @@ import java.security.Principal;
 @RequiredArgsConstructor
 @RequestMapping("api/employee")
 public class EmployeeController {
-    private final EmployeeService employeeService;
+    private final SupplyService supplyService;
+    private final SupplyDTOMapper supplyDTOMapper;
+    private final SupplyLineDTOMapper supplyLineDTOMapper;
 
-    @PostMapping("/order_supply")
-    public ResponseEntity<Supply> orderSupply(@RequestBody SupplyRequest supplyRequest,
-                                              Principal principal) {
-        Supply supply = employeeService.orderDelivery(supplyRequest, principal);
-        return new ResponseEntity<>(supply, HttpStatus.OK);
+    @PostMapping("/supplies")
+    public ResponseEntity<SupplyDTO> createSupply(@RequestBody SupplyCreateRequest supplyRequest,
+                                                  Principal principal) {
+        Supply supply = supplyService.createSupply(supplyRequest, principal);
+        return new ResponseEntity<>(
+                supplyDTOMapper.apply(supply),
+                HttpStatus.CREATED
+        );
     }
 
+    @PostMapping("/supplies/items")
+    public ResponseEntity<SupplyLineDTO> addItemToSupply(@RequestBody SupplyAddItemRequest request,
+                                                         Principal principal) {
+        SupplyLine supplyLine = supplyService.addItemToSupply(request, principal);
+        return new ResponseEntity<>(
+                supplyLineDTOMapper.apply(supplyLine),
+                HttpStatus.OK
+        );
+    }
 }

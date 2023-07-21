@@ -25,7 +25,10 @@ public class Employee {
     @JoinColumn(name = "warehouse_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Warehouse warehouse;
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "employee")
     @JsonIgnore
     private Set<Supply> supply;
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<SupplyLine> supplyLine;
 }

@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,5 +58,10 @@ public class SupplierService {
                 .stream()
                 .map(supplierDTOMapper)
                 .collect(Collectors.toList());
+    }
+
+    public Supplier getSupplierByPrincipal(Principal principal) {
+        User user = userService.getUserByPrincipal(principal);
+        return supplierRepository.findSupplierByUser(user);
     }
 }
