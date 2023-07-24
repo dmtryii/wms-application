@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -49,6 +50,45 @@ public class SupplyService {
         );
 
         return supplyLineRepository.save(supplyLine);
+    }
+
+    public Supply confirmSupply(Long supplyId, int days) {
+        Supply supply = getSupplyById(supplyId);
+        supply.setState(true);
+        supply.setDateOfSupply(LocalDate.now().plusDays(days));
+        return supplyRepository.save(supply);
+    }
+
+    public List<Supply> getAllBySupplier(Supplier supplier) {
+        return supplyRepository.findAllBySupplier(supplier);
+    }
+
+    public List<Supply> getAllConfirmSupply(Supplier supplier) {
+        return getAllBySupplier(supplier).stream()
+                .filter(Supply::isState)
+                .toList();
+    }
+
+    public List<Supply> getAllNotConfirmSupply(Supplier supplier) {
+        return getAllBySupplier(supplier).stream()
+                .filter(supply -> !supply.isState())
+                .toList();
+    }
+
+    public List<Supply> getAllConfirmSupply() {
+        return getAllSupply().stream()
+                .filter(Supply::isState)
+                .toList();
+    }
+
+    public List<Supply> getAllNotConfirmSupply() {
+        return getAllSupply().stream()
+                .filter(supply -> !supply.isState())
+                .toList();
+    }
+
+    public List<Supply> getAllSupply() {
+        return supplyRepository.findAll();
     }
 
     public Supply getSupplyById(Long supplyId) {
