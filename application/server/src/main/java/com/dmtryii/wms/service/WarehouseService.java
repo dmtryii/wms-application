@@ -1,14 +1,14 @@
 package com.dmtryii.wms.service;
 
-import com.dmtryii.wms.dto.request.AddressRequest;
-import com.dmtryii.wms.dto.WarehouseDTO;
+import com.dmtryii.wms.dto.request.AddressCreateRequest;
+import com.dmtryii.wms.dto.request.AddressUpdateRequest;
+import com.dmtryii.wms.dto.request.WarehouseCreateRequest;
 import com.dmtryii.wms.exception.ResourceNotFoundException;
 import com.dmtryii.wms.model.Address;
-import com.dmtryii.wms.model.OrderLine;
 import com.dmtryii.wms.model.Warehouse;
-import com.dmtryii.wms.repository.AddressRepository;
 import com.dmtryii.wms.repository.WarehouseRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -18,31 +18,29 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class WarehouseService {
-    public static final Logger LOG = LoggerFactory.getLogger(OrderLine.class);
+
+    public static final Logger LOG = LoggerFactory.getLogger(Warehouse.class);
     private final WarehouseRepository warehouseRepository;
-    private final CityService cityService;
-    private final AddressRepository addressRepository;
+    private final AddressService addressService;
+    private final ModelMapper modelMapper;
 
-    public Warehouse createWarehouse(AddressRequest addressRequest, Long cityId) {
+    public Warehouse createWarehouse(WarehouseCreateRequest request) {
 
-        Address address = Address.builder()
-                .currentName(addressRequest.currentAddressName())
-                .city(cityService.getCityById(cityId))
+        Address address = addressService.create(map(request));
+
+        Warehouse warehouse = Warehouse.builder()
+                .name(request.getName())
+                .address(address)
                 .build();
-        addressRepository.save(address);
-
-        Warehouse warehouse = new Warehouse();
-        warehouse.setAddress(address);
-
         return warehouseRepository.save(warehouse);
     }
 
-    public Warehouse updateWarehouse(Long warehouseId, WarehouseDTO warehouseDTO) {
+    public Warehouse updateAddress(Long warehouseId, AddressUpdateRequest request) {
         Warehouse warehouse = getWarehouseById(warehouseId);
-        warehouse.setName(warehouseDTO.name());
-        warehouse.setAddress(warehouse.getAddress());
-
-        LOG.info("The warehouse from ID {} has been updated", warehouseId);
+        Long addressId = warehouse.getAddress().getId();
+        warehouse.setAddress(
+                addressService.update(addressId, request)
+        );
         return warehouseRepository.save(warehouse);
     }
 
@@ -58,18 +56,19 @@ public class WarehouseService {
         return warehouseRepository.findAll();
     }
 
-    public Warehouse getWarehouseByName(String name) {
-        return warehouseRepository.findWarehouseByName(name);
-    }
-
     public Warehouse getWarehouseById(Long warehouseId) {
         return warehouseRepository.findById(warehouseId).orElseThrow(
                 () -> new ResourceNotFoundException("The warehouse not fount by id: " + warehouseId)
         );
     }
 
-    public void deleteWarehouseById(Long warehouseId) {
-        warehouseRepository.deleteById(warehouseId);
-        LOG.info("The warehouse from id {} was deleted", warehouseId);
+    public void deleteWarehouseById(Long id) {
+        Warehouse warehouse = getWarehouseById(id);
+        warehouseRepository.delete(warehouse);
+        LOG.info("The warehouse from id {} was deleted", id);
+    }
+
+    public AddressCreateRequest map(WarehouseCreateRequest request) {
+        return modelMapper.map(request, AddressCreateRequest.class);
     }
 }

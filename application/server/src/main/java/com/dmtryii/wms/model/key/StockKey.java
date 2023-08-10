@@ -13,8 +13,10 @@ import java.io.Serializable;
 @EqualsAndHashCode
 @Embeddable
 public class StockKey implements Serializable {
+
     @Column(name = "warehouse_id")
     private Long warehouseId;
+
     @Column(name = "item_id")
     private Long itemId;
 }

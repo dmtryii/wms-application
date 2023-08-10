@@ -1,5 +1,6 @@
 package com.dmtryii.wms.service;
 
+import com.dmtryii.wms.dto.request.CategoryRequest;
 import com.dmtryii.wms.exception.ResourceNotFoundException;
 import com.dmtryii.wms.model.Category;
 import com.dmtryii.wms.repository.CategoryRepository;
@@ -13,22 +14,23 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
+
     public static final Logger LOG = LoggerFactory.getLogger(Category.class);
     private final CategoryRepository categoryRepository;
 
-    public Category createCategory(Category categoryRequest) {
-        Category category = new Category();
-        category.setName(categoryRequest.getName());
-        category.setDescription(categoryRequest.getDescription());
-
+    public Category createCategory(CategoryRequest request) {
+        Category category = Category.builder()
+                .name(request.getName())
+                .description(request.getDescription())
+                .build();
         LOG.info("The {} category was created", category.getName());
         return categoryRepository.save(category);
     }
 
-    public Category updateCategory(Long categoryId, Category categoryRequest) {
+    public Category updateCategory(Long categoryId, CategoryRequest request) {
         Category category = getCategoryById(categoryId);
-        category.setName(categoryRequest.getName());
-        category.setDescription(categoryRequest.getDescription());
+        category.setName(request.getName());
+        category.setDescription(request.getDescription());
 
         LOG.info("The category {} was updated", category.getName());
         return categoryRepository.save(category);
@@ -45,7 +47,8 @@ public class CategoryService {
     }
 
     public void deleteCategory(Long categoryId) {
-        categoryRepository.deleteById(categoryId);
+        Category category = getCategoryById(categoryId);
+        categoryRepository.delete(category);
         LOG.info("The category from id {} was deleted", categoryId);
     }
 }

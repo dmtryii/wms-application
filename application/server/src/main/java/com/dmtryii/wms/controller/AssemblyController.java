@@ -1,8 +1,6 @@
 package com.dmtryii.wms.controller;
 
 import com.dmtryii.wms.dto.request.AssemblyRequest;
-import com.dmtryii.wms.dto.response.AssemblyResponse;
-import com.dmtryii.wms.dto_mapper.AssemblyDTOMapper;
 import com.dmtryii.wms.model.Assembly;
 import com.dmtryii.wms.model.Item;
 import com.dmtryii.wms.service.AssemblyService;
@@ -18,13 +16,12 @@ import java.util.List;
 @RequestMapping("/api/assemblies")
 public class AssemblyController {
     private final AssemblyService assemblyService;
-    private final AssemblyDTOMapper assemblyDTOMapper;
 
     @PostMapping
-    public ResponseEntity<AssemblyResponse> addAssemblyInstructions(@RequestBody AssemblyRequest assemblyRequest) {
+    public ResponseEntity<Assembly> addAssemblyInstructions(@RequestBody AssemblyRequest assemblyRequest) {
         Assembly assembly = assemblyService.addAssemblyInstructions(assemblyRequest);
         return new ResponseEntity<>(
-                assemblyDTOMapper.apply(assembly),
+                assembly,
                 HttpStatus.CREATED
         );
     }

@@ -11,16 +11,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 public class Stock {
+
     @EmbeddedId
     private StockKey stockId = new StockKey();
+
     @ManyToOne
     @MapsId("warehouseId")
     @JoinColumn(name = "warehouse_id")
     private Warehouse warehouse;
+
     @ManyToOne
     @MapsId("productId")
     @JoinColumn(name = "product_id")
     private Item item;
+
     @Column(nullable = false)
     private int quantity;
 }

@@ -1,8 +1,8 @@
 package com.dmtryii.wms.dto.request;
 
-public record OrderRequest(
-        Long id,
-        String details
-) {
+import lombok.Data;
 
+@Data
+public class OrderRequest {
+    private String details;
 }

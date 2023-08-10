@@ -13,6 +13,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class LocationService {
+
     public static final Logger LOG = LoggerFactory.getLogger(Location.class);
     private final LocationRepository locationRepository;
     private final ProductService productService;
@@ -29,9 +30,9 @@ public class LocationService {
 
     public Location addProductToWarehouse(LocationRequest locationRequest) {
 
-        Long warehouseId = locationRequest.warehouseId();
-        Long productId = locationRequest.productId();
-        int quantity = locationRequest.quantity();
+        Long warehouseId = locationRequest.getWarehouseId();
+        Long productId = locationRequest.getProductId();
+        int quantity = locationRequest.getQuantity();
 
         Location _location = getLocation(
                 warehouseId,

@@ -1,31 +1,25 @@
 package com.dmtryii.wms.service;
 
-import com.dmtryii.wms.dto.request.AddressRequest;
+import com.dmtryii.wms.dto.request.AddressUpdateRequest;
 import com.dmtryii.wms.dto.request.ContactsUpdateRequest;
-import com.dmtryii.wms.dto.UserDTO;
-import com.dmtryii.wms.dto_mapper.UserDTOMapper;
 import com.dmtryii.wms.exception.UserNotFoundException;
 import com.dmtryii.wms.model.Address;
 import com.dmtryii.wms.model.Contacts;
 import com.dmtryii.wms.model.User;
-import com.dmtryii.wms.repository.AddressRepository;
-import com.dmtryii.wms.repository.ContactsRepository;
 import com.dmtryii.wms.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
+
     private final UserRepository userRepository;
-    private final ContactsRepository contactsRepository;
-    private final AddressRepository addressRepository;
-    private final CityService cityService;
-    private final UserDTOMapper userDTOMapper;
+    private final AddressService addressService;
+    private final ContactsService contactsService;
 
     public User getUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(
@@ -33,29 +27,25 @@ public class UserService {
         );
     }
 
-    public User updateUserAddress(String username, Long cityId, AddressRequest addressUpdate) {
+    public List<User> getAllUser() {
+        return userRepository.findAll();
+    }
+
+    public User updateUserAddress(String username, AddressUpdateRequest request) {
         User user = getUserByUsername(username);
         Address address = getUserAddressByUsername(username);
 
-        address.setCurrentName(addressUpdate.currentAddressName());
-        address.setCity(cityService.getCityById(cityId));
-        addressRepository.save(address);
-
+        addressService.update(address.getId(), request);
         user.setAddress(address);
 
         return userRepository.save(user);
     }
 
-    public User updateUserContacts(String username, ContactsUpdateRequest contactsUpdateRequest) {
+    public User updateUserContacts(String username, ContactsUpdateRequest request) {
         User user = getUserByUsername(username);
         Contacts contacts = getUserContactsByUsername(username);
 
-        contacts.setPhone(contactsUpdateRequest.phone());
-        contacts.setFirstName(contactsUpdateRequest.firstName());
-        contacts.setLastName(contactsUpdateRequest.lastName());
-        contacts.setSocialNetworks(contactsUpdateRequest.socialNetworks());
-        contactsRepository.save(contacts);
-
+        contactsService.update(contacts.getId(), request);
         user.setContacts(contacts);
 
         return userRepository.save(user);
@@ -73,13 +63,6 @@ public class UserService {
         return userRepository.findByUsername(username).orElseThrow(
                 () -> new UserNotFoundException("User not found by username: " + username)
         );
-    }
-
-    public List<UserDTO> getAllUser() {
-        return userRepository.findAll()
-                .stream()
-                .map(userDTOMapper)
-                .collect(Collectors.toList());
     }
 
     public User getUserByPrincipal(Principal principal) {

@@ -9,16 +9,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 public class Assembly {
+
     @EmbeddedId
     private AssemblyKey assemblyKeyId = new AssemblyKey();
+
     @ManyToOne
     @MapsId("productId")
     @JoinColumn(name = "product_id")
     private Product product;
+
     @ManyToOne
     @MapsId("itemId")
     @JoinColumn(name = "item_id")
     private Item item;
+
     @Column(nullable = false)
     private int amount;
 

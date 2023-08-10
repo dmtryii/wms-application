@@ -15,6 +15,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class AssemblyService {
+
     public static final Logger LOG = LoggerFactory.getLogger(Assembly.class);
     private final AssemblyRepository assemblyRepository;
     private final ProductService productService;

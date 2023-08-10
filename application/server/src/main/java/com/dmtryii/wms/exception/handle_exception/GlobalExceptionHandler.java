@@ -1,8 +1,6 @@
 package com.dmtryii.wms.exception.handle_exception;
 
-import com.dmtryii.wms.exception.InvalidEmailException;
-import com.dmtryii.wms.exception.InvalidPasswordException;
-import com.dmtryii.wms.exception.UserNotFoundException;
+import com.dmtryii.wms.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,38 +12,64 @@ import java.util.Date;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(ResourceNotCreatedException.class)
+    public ResponseEntity<ErrorObject> handle(ResourceNotCreatedException ex,
+                                              WebRequest request) {
+        return handle_BAD_REQUEST(ex, request);
+    }
+
+    @ExceptionHandler(ResourceNotUpdatedException.class)
+    public ResponseEntity<ErrorObject> handle(ResourceNotUpdatedException ex,
+                                              WebRequest request) {
+        return handle_BAD_REQUEST(ex, request);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorObject> handle(ResourceNotFoundException ex,
+                                              WebRequest request) {
+        return handle_NOT_FOUND(ex, request);
+    }
+
+    @ExceptionHandler(CityNotUpdatedException.class)
+    public ResponseEntity<ErrorObject> handle(CityNotUpdatedException ex,
+                                              WebRequest request) {
+        return handle_BAD_REQUEST(ex, request);
+    }
+
+    @ExceptionHandler(CityNotCreatedException.class)
+    public ResponseEntity<ErrorObject> handle(CityNotCreatedException ex,
+                                              WebRequest request) {
+        return handle_BAD_REQUEST(ex, request);
+    }
+
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorObject> handleUserNotFoundException(UserNotFoundException ex,
-                                                                   WebRequest request) {
-        return handle_BAD_REQUEST(
-                ex,
-                request
-        );
+    public ResponseEntity<ErrorObject> handle(UserNotFoundException ex,
+                                              WebRequest request) {
+        return handle_BAD_REQUEST(ex, request);
     }
 
     @ExceptionHandler(InvalidEmailException.class)
-    public ResponseEntity<ErrorObject> handleInvalidEmailException(InvalidEmailException ex,
-                                                                   WebRequest request) {
-        return handle_BAD_REQUEST(
-                ex,
-                request
-        );
+    public ResponseEntity<ErrorObject> handle(InvalidEmailException ex,
+                                              WebRequest request) {
+        return handle_BAD_REQUEST(ex, request);
     }
 
     @ExceptionHandler(InvalidPasswordException.class)
-    public ResponseEntity<ErrorObject> handleInvalidPasswordException(InvalidPasswordException ex,
-                                                                      WebRequest request) {
-        return handle_BAD_REQUEST(
-                ex,
-                request
+    public ResponseEntity<ErrorObject> handle(InvalidPasswordException ex,
+                                              WebRequest request) {
+        return handle_BAD_REQUEST(ex, request);
+    }
+
+    private ResponseEntity<ErrorObject> handle_NOT_FOUND(RuntimeException ex,
+                                                         WebRequest request) {
+        return handleMethod(ex, request,
+                HttpStatus.NOT_FOUND
         );
     }
 
     private ResponseEntity<ErrorObject> handle_BAD_REQUEST(RuntimeException ex,
                                                            WebRequest request) {
-        return handleMethod(
-                ex,
-                request,
+        return handleMethod(ex, request,
                 HttpStatus.BAD_REQUEST
         );
     }

@@ -1,5 +1,7 @@
 package com.dmtryii.wms.service;
 
+import com.dmtryii.wms.dto.request.ProductRequest;
+import com.dmtryii.wms.dto.request.ProductUpdateRequest;
 import com.dmtryii.wms.exception.ResourceNotFoundException;
 import com.dmtryii.wms.model.Category;
 import com.dmtryii.wms.model.Product;
@@ -14,28 +16,33 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ProductService {
+
     public static final Logger LOG = LoggerFactory.getLogger(Product.class);
     private final ProductRepository productRepository;
     private final CategoryService categoryService;
 
-    public Product createProduct(Long categoryId, Product productRequest) {
-        Category category = categoryService.getCategoryById(categoryId);
+    public Product createProduct(ProductRequest request) {
+        Category category = categoryService.getCategoryById(request.getCategoryId());
 
-        Product product = new Product();
-        product.setName(productRequest.getName());
-        product.setPrice(productRequest.getPrice());
-        product.setDescription(productRequest.getDescription());
-        product.setCategory(category);
+        Product product = Product.builder()
+                .name(request.getName())
+                .price(request.getPrice())
+                .description(request.getDescription())
+                .category(category)
+                .build();
 
         LOG.info("Product was created");
         return productRepository.save(product);
     }
 
-    public Product updateProduct(Long productId, Product productRequest) {
+    public Product updateProduct(Long productId, ProductUpdateRequest request) {
         Product product = getProductById(productId);
-        product.setName(productRequest.getName());
-        product.setPrice(productRequest.getPrice());
-        product.setDescription(productRequest.getDescription());
+        Category category = categoryService.getCategoryById(request.getCategoryId());
+
+        product.setName(request.getName());
+        product.setPrice(request.getPrice());
+        product.setDescription(request.getDescription());
+        product.setCategory(category);
 
         LOG.info("The product from ID {} has been updated", productId);
         return productRepository.save(product);

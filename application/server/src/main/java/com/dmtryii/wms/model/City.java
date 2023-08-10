@@ -1,10 +1,13 @@
 package com.dmtryii.wms.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -12,13 +15,19 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 public class City {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "city_id")
     private Long id;
-    @Column(nullable = false)
+
+    @NotEmpty(message = "city name should not be empty")
     private String name;
-    private String country;
-    private Double longitude;
-    private Double latitude;
+
+    @Column(name = "country_name")
+    @NotEmpty(message = "country name should not be empty")
+    private String countryName;
+
+    @OneToMany(mappedBy = "city", fetch = FetchType.LAZY)
+    private List<Address> addresses;
 }

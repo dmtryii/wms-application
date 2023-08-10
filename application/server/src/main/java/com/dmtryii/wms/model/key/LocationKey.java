@@ -13,8 +13,10 @@ import java.io.Serializable;
 @EqualsAndHashCode
 @Embeddable
 public class LocationKey  implements Serializable {
+
     @Column(name = "warehouse_id")
     private Long warehouseId;
+
     @Column(name = "product_id")
     private Long productId;
 }

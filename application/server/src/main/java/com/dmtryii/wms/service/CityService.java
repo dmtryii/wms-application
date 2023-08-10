@@ -2,7 +2,6 @@ package com.dmtryii.wms.service;
 
 import com.dmtryii.wms.exception.ResourceNotFoundException;
 import com.dmtryii.wms.model.City;
-import com.dmtryii.wms.model.OrderLine;
 import com.dmtryii.wms.repository.CityRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -14,16 +13,15 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CityService {
-    public static final Logger LOG = LoggerFactory.getLogger(OrderLine.class);
+
+    public static final Logger LOG = LoggerFactory.getLogger(City.class);
     private final CityRepository cityRepository;
 
     public City createCity(City cityRequest) {
-        City city = new City();
-        city.setName(cityRequest.getName());
-        city.setCountry(cityRequest.getCountry());
-        city.setLongitude(cityRequest.getLongitude());
-        city.setLatitude(cityRequest.getLatitude());
-
+        City city = City.builder()
+                .name(cityRequest.getName())
+                .countryName(cityRequest.getCountryName())
+                .build();
         LOG.info("The city of {} was created", city.getName());
         return cityRepository.save(city);
     }
@@ -31,9 +29,7 @@ public class CityService {
     public City updateCity(Long cityId, City cityRequest) {
         City city = getCityById(cityId);
         city.setName(cityRequest.getName());
-        city.setCountry(cityRequest.getCountry());
-        city.setLongitude(cityRequest.getLongitude());
-        city.setLatitude(cityRequest.getLatitude());
+        city.setCountryName(cityRequest.getCountryName());
 
         LOG.info("The city {} was updated", city.getName());
         return cityRepository.save(city);
@@ -50,7 +46,8 @@ public class CityService {
     }
 
     public void deleteCityById(Long cityId) {
-        cityRepository.deleteById(cityId);
+        City city = getCityById(cityId);
+        cityRepository.delete(city);
         LOG.info("The city from id {} was deleted", cityId);
     }
 }

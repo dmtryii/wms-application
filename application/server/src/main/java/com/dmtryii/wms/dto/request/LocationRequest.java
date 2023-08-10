@@ -1,8 +1,10 @@
 package com.dmtryii.wms.dto.request;
 
-public record LocationRequest (
-        Long warehouseId,
-        Long productId,
-        int quantity
-){
+import lombok.Data;
+
+@Data
+public class LocationRequest {
+    private Long warehouseId;
+    private Long productId;
+    private Integer quantity;
 }
