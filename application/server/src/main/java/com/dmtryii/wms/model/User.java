@@ -48,8 +48,8 @@ public class User implements UserDetails {
     private Contacts contacts;
 
     @JsonManagedReference
-    @OneToOne(cascade = CascadeType.ALL , fetch = FetchType.EAGER)
-    @JoinColumn(name = "address_id", referencedColumnName = "address_id")
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "address_id")
     private Address address;
 
     @ElementCollection(targetClass = ERole.class)

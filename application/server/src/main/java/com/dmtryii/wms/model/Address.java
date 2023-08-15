@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.Set;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -36,8 +38,8 @@ public class Address {
     private City city;
 
     @JsonBackReference
-    @OneToOne(mappedBy = "address")
-    private User user;
+    @OneToMany(mappedBy = "address")
+    private Set<User> users;
 
     @JsonBackReference
     @OneToOne(mappedBy = "address")

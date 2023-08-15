@@ -1,5 +1,6 @@
 package com.dmtryii.wms.controller;
 
+import com.dmtryii.wms.dto.StockDTO;
 import com.dmtryii.wms.dto.response.WarehouseDTO;
 import com.dmtryii.wms.dto.request.AddressUpdateRequest;
 import com.dmtryii.wms.dto.request.LocationRequest;
@@ -8,8 +9,10 @@ import com.dmtryii.wms.exception.ResourceNotCreatedException;
 import com.dmtryii.wms.exception.ResourceNotUpdatedException;
 import com.dmtryii.wms.exception.handle_exception.BadRequestRecorder;
 import com.dmtryii.wms.model.Location;
+import com.dmtryii.wms.model.Stock;
 import com.dmtryii.wms.model.Warehouse;
 import com.dmtryii.wms.service.LocationService;
+import com.dmtryii.wms.service.StockService;
 import com.dmtryii.wms.service.WarehouseService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,9 +29,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WarehouseController {
     private final WarehouseService warehouseService;
+    private final StockService stockService;
     private final LocationService locationService;
     private final ModelMapper modelMapper;
     private final BadRequestRecorder errorRecorder;
+
+    @PostMapping("{warehouse_id}/stock")
+    public ResponseEntity<List<StockDTO>> checkItems(@PathVariable(name = "warehouse_id") Long warehouseId) {
+        List<StockDTO> stocks = stockService.updateItemsByWarehouseId(warehouseId)
+                .stream()
+                .map(this::map)
+                .toList();
+        return new ResponseEntity<>(stocks, HttpStatus.OK);
+    }
 
     @PostMapping("/products")
     public ResponseEntity<Location> addProductToWarehouse(LocationRequest locationRequest) {
@@ -100,5 +113,8 @@ public class WarehouseController {
 
     private WarehouseDTO map(Warehouse warehouse) {
         return modelMapper.map(warehouse, WarehouseDTO.class);
+    }
+    private StockDTO map(Stock stock) {
+        return modelMapper.map(stock, StockDTO.class);
     }
 }

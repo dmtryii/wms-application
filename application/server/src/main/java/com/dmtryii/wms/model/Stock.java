@@ -21,10 +21,16 @@ public class Stock {
     private Warehouse warehouse;
 
     @ManyToOne
-    @MapsId("productId")
-    @JoinColumn(name = "product_id")
+    @MapsId("itemId")
+    @JoinColumn(name = "item_id")
     private Item item;
 
     @Column(nullable = false)
     private int quantity;
+
+    public Stock(Warehouse warehouse, Item item, int quantity) {
+        this.warehouse = warehouse;
+        this.item = item;
+        this.quantity = quantity;
+    }
 }

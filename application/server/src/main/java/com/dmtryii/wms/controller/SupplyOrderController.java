@@ -1,6 +1,6 @@
 package com.dmtryii.wms.controller;
 
-import com.dmtryii.wms.dto.request.StateRequest;
+import com.dmtryii.wms.dto.request.StateAndDaysRequest;
 import com.dmtryii.wms.dto.response.SupplyOrderDTO;
 import com.dmtryii.wms.dto.request.SupplyOrderRequest;
 import com.dmtryii.wms.exception.ResourceNotCreatedException;
@@ -17,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -43,7 +44,7 @@ public class SupplyOrderController {
 
     @PatchMapping("/{supply_order_id}/state")
     public ResponseEntity<SupplyOrderDTO> updateState(@PathVariable("supply_order_id") Long supplyOrderId,
-                                                      @RequestBody @Valid StateRequest request,
+                                                      @RequestBody @Valid StateAndDaysRequest request,
                                                       Principal principal,
                                                       BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
@@ -55,6 +56,16 @@ public class SupplyOrderController {
                 map(supplyOrder),
                 HttpStatus.OK
         );
+    }
+
+    @GetMapping("warehouses/{warehouse_id}")
+    public ResponseEntity<List<SupplyOrderDTO>> getAllByWarehouseId(@PathVariable("warehouse_id") Long warehouseId) {
+
+        List<SupplyOrderDTO> supplyOrders = supplyOrderService.getAllByWarehouseId(warehouseId)
+                .stream()
+                .map(this::map)
+                .toList();
+        return new ResponseEntity<>(supplyOrders, HttpStatus.OK);
     }
 
     private SupplyOrderDTO map(SupplyOrder supplyOrder) {
