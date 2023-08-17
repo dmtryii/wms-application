@@ -15,6 +15,8 @@ import com.dmtryii.wms.validation.RegisterValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +33,7 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final RegisterValidator registerValidator;
+    private final UserDetailsService userDetailsService;
 
     public AuthenticationResponse register(RegisterRequest request) {
 
@@ -50,7 +53,9 @@ public class AuthenticationService {
 
         userRepository.save(user);
 
-        var jwtToken = jwtService.generateToken(user);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
+
+        var jwtToken = jwtService.generateToken(userDetails);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
@@ -65,7 +70,10 @@ public class AuthenticationService {
         );
         var user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow();
-        var jwtToken = jwtService.generateToken(user);
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
+
+        var jwtToken = jwtService.generateToken(userDetails);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();

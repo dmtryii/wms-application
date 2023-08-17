@@ -1,6 +1,7 @@
 package com.dmtryii.wms.config;
 
 import com.dmtryii.wms.repository.UserRepository;
+import com.dmtryii.wms.security.UserDetailsSecurity;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
@@ -22,8 +23,11 @@ public class ApplicationConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return username -> new UserDetailsSecurity(
+                userRepository.findByUsername(username).orElseThrow(
+                        () -> new UsernameNotFoundException("User not found!")
+                )
+        );
     }
 
     @Bean
