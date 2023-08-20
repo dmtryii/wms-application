@@ -12,6 +12,12 @@ import java.util.Date;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(DoAssemblyProductException.class)
+    public ResponseEntity<ErrorObject> handle(DoAssemblyProductException ex,
+                                              WebRequest request) {
+        return handle_BAD_REQUEST(ex, request);
+    }
+
     @ExceptionHandler(ResourceNotCreatedException.class)
     public ResponseEntity<ErrorObject> handle(ResourceNotCreatedException ex,
                                               WebRequest request) {

@@ -1,9 +1,10 @@
 package com.dmtryii.wms.controller;
 
 import com.dmtryii.wms.dto.StockDTO;
+import com.dmtryii.wms.dto.request.DoAssemblyRequest;
+import com.dmtryii.wms.dto.response.LocationDTO;
 import com.dmtryii.wms.dto.response.WarehouseDTO;
 import com.dmtryii.wms.dto.request.AddressUpdateRequest;
-import com.dmtryii.wms.dto.request.LocationRequest;
 import com.dmtryii.wms.dto.request.WarehouseCreateRequest;
 import com.dmtryii.wms.exception.ResourceNotCreatedException;
 import com.dmtryii.wms.exception.ResourceNotUpdatedException;
@@ -43,10 +44,19 @@ public class WarehouseController {
         return new ResponseEntity<>(stocks, HttpStatus.OK);
     }
 
-    @PostMapping("/products")
-    public ResponseEntity<Location> addProductToWarehouse(LocationRequest locationRequest) {
-        Location location = locationService.addProductToWarehouse(locationRequest);
-        return new ResponseEntity<>(location, HttpStatus.CREATED);
+    @PostMapping("{warehouse_id}/products")
+    public ResponseEntity<LocationDTO> doAssemblyProduct(@PathVariable(name = "warehouse_id") Long warehouseId,
+                                                         @RequestBody @Valid DoAssemblyRequest request,
+                                                         BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            String errors = errorRecorder.getRecordedErrors(bindingResult);
+            throw new ResourceNotCreatedException(errors);
+        }
+        Location location = locationService.doAssemblyProduct(warehouseId, request);
+        return new ResponseEntity<>(
+                map(location),
+                HttpStatus.CREATED
+        );
     }
 
     @GetMapping
@@ -116,5 +126,8 @@ public class WarehouseController {
     }
     private StockDTO map(Stock stock) {
         return modelMapper.map(stock, StockDTO.class);
+    }
+    private LocationDTO map(Location location) {
+        return modelMapper.map(location, LocationDTO.class);
     }
 }

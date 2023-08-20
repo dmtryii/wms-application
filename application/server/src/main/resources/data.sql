@@ -7,7 +7,8 @@ VALUES ('Kiev', 'Ukraine'),
 INSERT INTO item (name, price, description)
 VALUES ('coffee beans', 22.3, 'power desc'),
        ('tea leaves', 5.5, 'tea desc'),
-       ('microcircuits', 112.53, 'coffee desc');
+       ('microcircuits', 112.53, 'coffee desc'),
+       ('box', 1.5, 'box desc');
 
 -- category
 INSERT INTO category (name, description)
@@ -73,3 +74,14 @@ VALUES (0, 1), (4, 1),
        (3, 4), (4, 4), -- tom  -- employee
        (3, 5), (4, 5), -- sem  -- employee
        (4, 6);
+
+
+---- STOCK ----
+INSERT INTO stock (warehouse_id, item_id, quantity)
+VALUES (1, 1, 100),
+       (1, 4, 120);
+
+---- ASSEMBLY ----
+INSERT INTO assembly (product_id, item_id, amount)
+VALUES (1, 1, 1),
+       (1, 4, 1);

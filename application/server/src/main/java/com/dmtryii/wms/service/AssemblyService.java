@@ -1,6 +1,7 @@
 package com.dmtryii.wms.service;
 
 import com.dmtryii.wms.dto.request.AssemblyRequest;
+import com.dmtryii.wms.exception.ResourceNotFoundException;
 import com.dmtryii.wms.model.Assembly;
 import com.dmtryii.wms.model.Item;
 import com.dmtryii.wms.repository.AssemblyRepository;
@@ -23,13 +24,11 @@ public class AssemblyService {
 
     public Assembly addAssemblyInstructions(AssemblyRequest assemblyRequest) {
 
-        Long productId = assemblyRequest.productId();
-        Long itemId = assemblyRequest.itemId();
-        int amount = assemblyRequest.amount();
+        Long productId = assemblyRequest.getProductId();
+        Long itemId = assemblyRequest.getItemId();
+        Integer amount = assemblyRequest.getAmount();
 
-        if(amount <= 0) throw new RuntimeException("An assembly cannot contain less than one component");
-
-        if(itemAndProductsRelated(productId, itemId)) {
+        if(itemAndProductRelated(productId, itemId)) {
             return assemblyRepository
                     .findAssembliesByProductIdAndItemId(productId, itemId);
         }
@@ -50,8 +49,10 @@ public class AssemblyService {
 
     @Transactional
     public void deleteAssemblyInstructions(Long productId, Long itemId) {
-        if (!itemAndProductsRelated(productId, itemId)) {
-            return;
+        if (!itemAndProductRelated(productId, itemId)) {
+            throw new ResourceNotFoundException(
+                    String.format("The assembly not fount by productId %d and itemId %d", productId, itemId)
+            );
         }
         assemblyRepository.deleteAssemblyByProductIdAndItemId(productId, itemId);
         LOG.info("An assembly with product ID {} and item ID {} has been delete", productId, itemId);
@@ -69,7 +70,7 @@ public class AssemblyService {
                 .findAssembliesByProductId(productId);
     }
 
-    private boolean itemAndProductsRelated(Long productId, Long itemId) {
+    private boolean itemAndProductRelated(Long productId, Long itemId) {
         Assembly assembly = assemblyRepository
                 .findAssembliesByProductIdAndItemId(productId, itemId);
 

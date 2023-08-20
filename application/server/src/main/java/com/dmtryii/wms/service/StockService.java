@@ -29,6 +29,13 @@ public class StockService {
             Long itemId = deliveryOrder.getItem().getId();
             Integer quantity = deliveryOrder.getAmount();
 
+            Stock stock = getStock(warehouseId, itemId);
+
+            if(stock != null) {
+                updateItemsInWarehouse(stock, quantity);
+                continue;
+            }
+
             stocks.add(create(warehouseId, itemId, quantity));
         }
         return stocks;
@@ -46,7 +53,20 @@ public class StockService {
         return stockRepository.save(stock);
     }
 
+    public Stock getStock(Long warehouseId, Long itemId) {
+        Warehouse warehouse = warehouseService.getWarehouseById(warehouseId);
+        Item item = itemService.getItemById(itemId);
+        return stockRepository.findByWarehouseAndItem(warehouse, item);
+    }
+
     public List<Stock> getAll() {
         return stockRepository.findAll();
+    }
+
+    private void updateItemsInWarehouse(Stock stock, Integer quantity) {
+        stock.setQuantity(
+                stock.getQuantity() + quantity
+        );
+        stockRepository.save(stock);
     }
 }

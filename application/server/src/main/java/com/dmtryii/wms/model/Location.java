@@ -27,4 +27,10 @@ public class Location {
 
     @Column(nullable = false)
     private int quantity;
+
+    public Location(Warehouse warehouse, Product product, int quantity) {
+        this.warehouse = warehouse;
+        this.product = product;
+        this.quantity = quantity;
+    }
 }
